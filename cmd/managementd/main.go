@@ -79,6 +79,10 @@ func main() {
 	apiRouter.HandleFunc("/camera/snapshot", apiObj.TakeSnapshot).Methods("PUT")
 	apiRouter.HandleFunc("/signal-strength", apiObj.GetSignalStrength).Methods("GET")
 	apiRouter.HandleFunc("/location", managementinterface.APILocationHandler).Methods("POST") // Set location via a POST request.
+	apiRouter.HandleFunc("/digital-pins", apiObj.GetAllDigitalPins).Methods("GET")
+	apiRouter.HandleFunc("/servos", apiObj.GetAllServos).Methods("GET")
+	apiRouter.HandleFunc("/actuators", apiObj.GetAllActuators).Methods("GET")
+
 	apiRouter.Use(basicAuth)
 
 	listenAddr := fmt.Sprintf(":%d", config.Port)

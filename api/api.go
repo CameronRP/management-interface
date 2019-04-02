@@ -30,6 +30,7 @@ import (
 	"strconv"
 
 	signalstrength "github.com/TheCacophonyProject/management-interface/signal-strength"
+	"github.com/TheCacophonyProject/rs485-controller/trapController"
 	"github.com/godbus/dbus"
 	"github.com/gorilla/mux"
 )
@@ -47,6 +48,36 @@ func NewAPI(cptvDir string) *ManagementAPI {
 	return &ManagementAPI{
 		cptvDir: cptvDir,
 	}
+}
+
+func (api *ManagementAPI) GetAllDigitalPins(w http.ResponseWriter, r *http.Request) {
+	result, err := trapController.DigitalPinReadAll(true)
+	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	json.NewEncoder(w).Encode(result)
+}
+
+func (api *ManagementAPI) GetAllServos(w http.ResponseWriter, r *http.Request) {
+	result, err := trapController.ServoReadAll(true)
+	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	json.NewEncoder(w).Encode(result)
+}
+
+func (api *ManagementAPI) GetAllActuators(w http.ResponseWriter, r *http.Request) {
+	result, err := trapController.ActuatorReadAll(true)
+	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	json.NewEncoder(w).Encode(result)
 }
 
 // GetRecordings returns a list of cptv files in a array.
