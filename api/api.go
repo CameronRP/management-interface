@@ -94,7 +94,6 @@ func (api *ManagementAPI) PostDigitalPin(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	return
 }
 
 func (api *ManagementAPI) PostServo(w http.ResponseWriter, r *http.Request) {
@@ -111,7 +110,6 @@ func (api *ManagementAPI) PostServo(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	return
 }
 
 func (api *ManagementAPI) PostActuator(w http.ResponseWriter, r *http.Request) {
@@ -128,7 +126,6 @@ func (api *ManagementAPI) PostActuator(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	return
 }
 
 func getNameAndVal(r *http.Request) (name string, val uint16, err error) {
