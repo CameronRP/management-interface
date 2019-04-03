@@ -80,6 +80,64 @@ func (api *ManagementAPI) GetAllActuators(w http.ResponseWriter, r *http.Request
 	json.NewEncoder(w).Encode(result)
 }
 
+func (api *ManagementAPI) PostDigitalPin(w http.ResponseWriter, r *http.Request) {
+	name, val, err := getNameAndVal(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+		return
+	}
+	err = trapController.DigitalPinWrite(name, val)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+	}
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+func (api *ManagementAPI) PostServo(w http.ResponseWriter, r *http.Request) {
+	name, val, err := getNameAndVal(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+		return
+	}
+	err = trapController.ServoWrite(name, val)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+	}
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+func (api *ManagementAPI) PostActuator(w http.ResponseWriter, r *http.Request) {
+	name, val, err := getNameAndVal(r)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+		return
+	}
+	err = trapController.ActuatorWrite(name, val)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		io.WriteString(w, err.Error())
+	}
+	w.WriteHeader(http.StatusOK)
+	return
+}
+
+func getNameAndVal(r *http.Request) (name string, val uint16, err error) {
+	name = r.FormValue("name")
+	valInt, err := strconv.Atoi(r.FormValue("value"))
+	if err != nil {
+		return
+	}
+	val = uint16(valInt)
+	return
+}
+
 // GetRecordings returns a list of cptv files in a array.
 func (api *ManagementAPI) GetRecordings(w http.ResponseWriter, r *http.Request) {
 	log.Println("get recordings")

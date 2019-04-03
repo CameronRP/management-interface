@@ -80,8 +80,11 @@ func main() {
 	apiRouter.HandleFunc("/signal-strength", apiObj.GetSignalStrength).Methods("GET")
 	apiRouter.HandleFunc("/location", managementinterface.APILocationHandler).Methods("POST") // Set location via a POST request.
 	apiRouter.HandleFunc("/digital-pins", apiObj.GetAllDigitalPins).Methods("GET")
+	apiRouter.HandleFunc("/digital-pins", apiObj.PostDigitalPin).Methods("POST")
 	apiRouter.HandleFunc("/servos", apiObj.GetAllServos).Methods("GET")
+	apiRouter.HandleFunc("/servos", apiObj.PostServo).Methods("POST")
 	apiRouter.HandleFunc("/actuators", apiObj.GetAllActuators).Methods("GET")
+	apiRouter.HandleFunc("/actuators", apiObj.PostActuator).Methods("POST")
 
 	apiRouter.Use(basicAuth)
 
