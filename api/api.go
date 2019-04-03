@@ -91,6 +91,7 @@ func (api *ManagementAPI) PostDigitalPin(w http.ResponseWriter, r *http.Request)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, err.Error())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	return
@@ -107,6 +108,7 @@ func (api *ManagementAPI) PostServo(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, err.Error())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	return
@@ -123,6 +125,7 @@ func (api *ManagementAPI) PostActuator(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, err.Error())
+		return
 	}
 	w.WriteHeader(http.StatusOK)
 	return
