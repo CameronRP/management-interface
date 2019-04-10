@@ -73,8 +73,9 @@ func APILocationHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 	} else if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+	} else {
+		w.WriteHeader(http.StatusOK)
 	}
-	w.WriteHeader(http.StatusOK)
 }
 
 func handleLocationPostRequest(w http.ResponseWriter, r *http.Request) (*rawLocationData, error) {
