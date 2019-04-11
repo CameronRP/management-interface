@@ -69,6 +69,7 @@ func main() {
 	router.HandleFunc("/location", managementinterface.LocationHandler).Methods("GET", "POST") // Form to view and/or set location manually.
 	router.HandleFunc("/camera", managementinterface.CameraHandler).Methods("GET")
 	router.HandleFunc("/camera/snapshot", managementinterface.CameraSnapshot).Methods("GET")
+	router.HandleFunc("/trap", managementinterface.Trap).Methods("GET")
 
 	// API
 	apiObj := api.NewAPI(config.CPTVDir)

@@ -636,3 +636,8 @@ func CameraHandler(w http.ResponseWriter, r *http.Request) {
 func CameraSnapshot(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "/var/spool/cptv/still.png")
 }
+
+// Trap - Shows trap state
+func Trap(w http.ResponseWriter, r *http.Request) {
+	tmpl.ExecuteTemplate(w, "trap.html", nil)
+}
