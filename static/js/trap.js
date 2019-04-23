@@ -177,6 +177,7 @@ function updateServos(res) {
       angle.min = "0";
       angle.max = "180";
       angle.onmouseup = updateServoAngle(s.Name);
+      angle.ontouchend = angle.onmouseup;
       div.appendChild(angle);
 
       ele.appendChild(div)
