@@ -50,6 +50,34 @@ func NewAPI(cptvDir string) *ManagementAPI {
 	}
 }
 
+func (api *ManagementAPI) StartSequence(w http.ResponseWriter, r *http.Request) {
+	err := trapController.StartSequence()
+	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+}
+
+func (api *ManagementAPI) StopSequence(w http.ResponseWriter, r *http.Request) {
+	err := trapController.StopSequence()
+	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+}
+
+func (api *ManagementAPI) GetSequenceState(w http.ResponseWriter, r *http.Request) {
+	state, err := trapController.GetSequenceState()
+	w.WriteHeader(http.StatusOK)
+	if err != nil {
+		io.WriteString(w, err.Error())
+		return
+	}
+	io.WriteString(w, state)
+}
+
 func (api *ManagementAPI) GetAllDigitalPins(w http.ResponseWriter, r *http.Request) {
 	result, err := trapController.DigitalPinReadAll(true)
 	w.WriteHeader(http.StatusOK)

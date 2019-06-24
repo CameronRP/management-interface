@@ -1,5 +1,6 @@
 window.onload = function() {
   trapUpdateLoop();
+  sequenceUpdateLoop();
 };
 
 trapUpdateLoop = async function() {
@@ -36,6 +37,38 @@ trapUpdateLoop = async function() {
 
   await sleep(1000);
   trapUpdateLoop()
+}
+
+sequenceUpdateLoop = async function() {
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "/api/get-sequence-state", true)
+  xhr.setRequestHeader("Authorization", "Basic "+btoa("admin:feathers"))
+  xhr.onreadystatechange = async function() {
+    if (xhr.readyState == 4 && xhr.status == 200) {
+      console.log(xhr.responseText);
+      document.getElementById("state").innerText = xhr.responseText;
+    }
+  }
+  xhr.send(null);
+
+
+  await sleep(1000);
+  sequenceUpdateLoop()
+}
+
+function startSequence() {
+  var updateRequest = new XMLHttpRequest();
+  updateRequest.open("POST", "/api/start-sequence", true)
+  updateRequest.setRequestHeader("Authorization", "Basic "+btoa("admin:feathers"))
+  updateRequest.send(null);
+}
+
+function stopSequence() {
+  var updateRequest = new XMLHttpRequest();
+  updateRequest.open("POST", "/api/stop-sequence", true)
+  updateRequest.setRequestHeader("Authorization", "Basic "+btoa("admin:feathers"))
+  updateRequest.send(null);
 }
 
 function updateDigitalPins(res) {

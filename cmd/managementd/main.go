@@ -86,6 +86,9 @@ func main() {
 	apiRouter.HandleFunc("/servos", apiObj.PostServo).Methods("POST")
 	apiRouter.HandleFunc("/actuators", apiObj.GetAllActuators).Methods("GET")
 	apiRouter.HandleFunc("/actuators", apiObj.PostActuator).Methods("POST")
+	apiRouter.HandleFunc("/get-sequence-state", apiObj.GetSequenceState).Methods("GET")
+	apiRouter.HandleFunc("/start-sequence", apiObj.StartSequence).Methods("POST")
+	apiRouter.HandleFunc("/stop-sequence", apiObj.StopSequence).Methods("POST")
 
 	apiRouter.Use(basicAuth)
 
