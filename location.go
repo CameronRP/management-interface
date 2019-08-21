@@ -20,15 +20,25 @@ package managementinterface
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	yaml "gopkg.in/yaml.v2"
 )
 
-const deviceLocationFile = "/etc/cacophony/location.yaml"
+const (
+	deviceLocationFile = "/etc/cacophony/location.yaml"
+	maxLatitude        = 90
+	maxLongitude       = 180
+	minAltitude        = 0
+	maxAltitude        = 10000
+	minAccuracy        = 0
+	maxAccuracy        = 10000
+)
 
 // LocationHandler shows and updates the location of the device.
 func LocationHandler(w http.ResponseWriter, r *http.Request) {
@@ -88,6 +98,7 @@ func handleLocationPostRequest(w http.ResponseWriter, r *http.Request) (*rawLoca
 	} else {
 		var err error
 		rawLocation = newRawLocationData(r)
+		rawLocation.Timestamp = timestampToString(time.Now()) // Update the timestamp.
 		location, err = rawLocation.locationData()
 		if err != nil {
 			return rawLocation, err
@@ -100,16 +111,22 @@ func handleLocationPostRequest(w http.ResponseWriter, r *http.Request) (*rawLoca
 	return rawLocation, nil
 }
 
-// locationData holds a (latitude, longitude) pair
+// locationData holds location information
 type locationData struct {
-	Latitude  float64 `yaml:"latitude"`
-	Longitude float64 `yaml:"longitude"`
+	Latitude  float64   `yaml:"latitude"`
+	Longitude float64   `yaml:"longitude"`
+	Timestamp time.Time `yaml:"timestamp"`
+	Altitude  float64   `yaml:"altitude"`
+	Accuracy  float64   `yaml:"accuracy"`
 }
 
 func (l *locationData) rawLocationData() *rawLocationData {
 	return &rawLocationData{
 		Latitude:  floatToString(l.Latitude),
 		Longitude: floatToString(l.Longitude),
+		Timestamp: timestampToString(l.Timestamp),
+		Altitude:  floatToString(l.Altitude),
+		Accuracy:  floatToString(l.Accuracy),
 	}
 }
 
@@ -117,27 +134,50 @@ func (l *locationData) rawLocationData() *rawLocationData {
 type rawLocationData struct {
 	Latitude  string
 	Longitude string
+	Timestamp string
+	Altitude  string
+	Accuracy  string
 }
 
 func newRawLocationData(r *http.Request) *rawLocationData {
 	return &rawLocationData{
 		Latitude:  trimmedFormValue(r, "latitude"),
 		Longitude: trimmedFormValue(r, "longitude"),
+		Timestamp: trimmedFormValue(r, "timestamp"),
+		Altitude:  trimmedFormValue(r, "altitude"),
+		Accuracy:  trimmedFormValue(r, "accuracy"),
 	}
 }
 
 func (fl *rawLocationData) locationData() (*locationData, error) {
+
 	lat, ok := parseFloat(fl.Latitude)
-	if !ok {
-		return nil, newClientError("Invalid latitude")
+	if !ok || lat < -maxLatitude || lat > maxLatitude {
+		return nil, newClientError(fmt.Sprintf("Invalid latitude. Should be between %d and %d", -maxLatitude, maxLatitude))
 	}
 	lon, ok := parseFloat(fl.Longitude)
-	if !ok {
-		return nil, newClientError("Invalid longitude")
+	if !ok || lon < -maxLongitude || lon > maxLongitude {
+		return nil, newClientError(fmt.Sprintf("Invalid longitude. Should be between %d and %d", -maxLongitude, maxLongitude))
 	}
+	ts, ok := parseTimestamp(fl.Timestamp)
+	if !ok {
+		return nil, newClientError("Invalid timestamp")
+	}
+	alt, ok := parseOptionalFloat(fl.Altitude)
+	if !ok || alt < minAltitude || alt > maxAltitude {
+		return nil, newClientError(fmt.Sprintf("Invalid altitude. Should be between %d and %d", minAltitude, maxAltitude))
+	}
+	acc, ok := parseOptionalFloat(fl.Accuracy)
+	if !ok || acc < minAccuracy || acc > maxAccuracy {
+		return nil, newClientError(fmt.Sprintf("Invalid accuracy. Should be between %d and %d", minAccuracy, maxAccuracy))
+	}
+
 	return &locationData{
 		Latitude:  lat,
 		Longitude: lon,
+		Timestamp: ts,
+		Altitude:  alt,
+		Accuracy:  acc,
 	}, nil
 }
 

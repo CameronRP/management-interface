@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Cacophonator Setup</title>
+    <title>Location</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
@@ -41,6 +41,27 @@
               <div class="form-group col-md-6">
                 <label for="longitude">Longitude</label>
                 <input type="text" class="form-control" name="longitude" placeholder="Enter longitude" value="{{.Location.Longitude}}">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="timestamp">Timestamp</label>
+                <input type="text" class="form-control" name="timestamp" placeholder="Enter timestamp" value="{{.Location.Timestamp}}" disabled>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="altitude">Altitude</label>
+                <input type="text" class="form-control" name="altitude" placeholder="Enter altitude" value="{{.Location.Altitude}}">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="accuracy">Accuracy</label>
+                <input type="text" class="form-control" name="accuracy" placeholder="Enter accuracy" value="{{.Location.Accuracy}}">
               </div>
             </div>
 

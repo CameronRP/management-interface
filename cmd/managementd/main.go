@@ -67,18 +67,25 @@ func main() {
 	router.HandleFunc("/speaker/status", managementinterface.SpeakerStatusHandler).Methods("GET")
 	router.HandleFunc("/disk-memory", managementinterface.DiskMemoryHandler).Methods("GET")
 	router.HandleFunc("/location", managementinterface.LocationHandler).Methods("GET", "POST") // Form to view and/or set location manually.
+	router.HandleFunc("/clock", managementinterface.TimeHandler).Methods("GET", "POST")        // Form to view and/or adjust time settings.
+	router.HandleFunc("/about", managementinterface.AboutHandler).Methods("GET")
+	router.HandleFunc("/advanced", managementinterface.AdvancedMenuHandler).Methods("GET")
 	router.HandleFunc("/camera", managementinterface.CameraHandler).Methods("GET")
 	router.HandleFunc("/camera/snapshot", managementinterface.CameraSnapshot).Methods("GET")
 	router.HandleFunc("/trap", managementinterface.Trap).Methods("GET")
+	router.HandleFunc("/rename", managementinterface.Rename).Methods("GET")
 
 	// API
 	apiObj := api.NewAPI(config.CPTVDir)
 	apiRouter := router.PathPrefix("/api").Subrouter()
+	apiRouter.HandleFunc("/device-info", apiObj.GetDeviceInfo).Methods("GET")
 	apiRouter.HandleFunc("/recordings", apiObj.GetRecordings).Methods("GET")
 	apiRouter.HandleFunc("/recording/{id}", apiObj.GetRecording).Methods("GET")
 	apiRouter.HandleFunc("/recording/{id}", apiObj.DeleteRecording).Methods("DELETE")
 	apiRouter.HandleFunc("/camera/snapshot", apiObj.TakeSnapshot).Methods("PUT")
 	apiRouter.HandleFunc("/signal-strength", apiObj.GetSignalStrength).Methods("GET")
+	apiRouter.HandleFunc("/rename", apiObj.Rename).Methods("POST")
+	apiRouter.HandleFunc("/reboot", apiObj.Reboot).Methods("POST")
 	apiRouter.HandleFunc("/location", managementinterface.APILocationHandler).Methods("POST") // Set location via a POST request.
 	apiRouter.HandleFunc("/digital-pins", apiObj.GetAllDigitalPins).Methods("GET")
 	apiRouter.HandleFunc("/digital-pins", apiObj.PostDigitalPin).Methods("POST")
@@ -89,7 +96,7 @@ func main() {
 	apiRouter.HandleFunc("/get-sequence-state", apiObj.GetSequenceState).Methods("GET")
 	apiRouter.HandleFunc("/start-sequence", apiObj.StartSequence).Methods("POST")
 	apiRouter.HandleFunc("/stop-sequence", apiObj.StopSequence).Methods("POST")
-
+	apiRouter.HandleFunc("/clock", managementinterface.APITimeHandler).Methods("POST") // Set times via a POST request.
 	apiRouter.Use(basicAuth)
 
 	listenAddr := fmt.Sprintf(":%d", config.Port)

@@ -178,7 +178,10 @@ func DiskMemoryHandler(w http.ResponseWriter, r *http.Request) {
 	rows := strings.Split(diskData, "\n")
 	for _, row := range rows[1:] {
 		words := strings.Fields(row)
-		outputStrings = append(outputStrings, words)
+		if len(words) >= 6 {
+			words[0], words[5] = words[5], words[0] // This swaps these 2 columns
+			outputStrings = append(outputStrings, words)
+		}
 	}
 
 	memoryData, err := getMemoryStats()
@@ -194,8 +197,14 @@ func DiskMemoryHandler(w http.ResponseWriter, r *http.Request) {
 		if len(words) > 1 && strings.HasPrefix(words[1], "K ") {
 			words[0] = words[0] + " K"
 			words[1] = words[1][2:]
+			words[0], words[1] = words[1], words[0] // This reverses the 2 columns
+			words[0] = strings.Title(words[0])
 		}
 		outputStrings2 = append(outputStrings2, words)
+		if words[0] == "Free Swap" {
+			// Don't want any of the output after this line.
+			break
+		}
 	}
 
 	// Put it all in a struct so we can access it from HTML
@@ -216,6 +225,11 @@ func DiskMemoryHandler(w http.ResponseWriter, r *http.Request) {
 // IndexHandler is the root handler.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "index.html", nil)
+}
+
+// AdvancedMenuHandler is a screen to more advanced settings.
+func AdvancedMenuHandler(w http.ResponseWriter, r *http.Request) {
+	tmpl.ExecuteTemplate(w, "advanced.html", nil)
 }
 
 // Get the IP address for a given interface.  There can be 0, 1 or 2 (e.g. IPv4 and IPv6)
@@ -544,6 +558,51 @@ func WifiNetworkHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "wifi-networks.html", wifiProps)
 }
 
+// Return info on the packages that are currently installed on the device.
+func getInstalledPackages() (string, error) {
+
+	if runtime.GOOS == "windows" {
+		return "", nil
+	}
+
+	out, err := exec.Command("/usr/bin/dpkg-query", "--show", "--showformat", "${Package}|${Version}|${Maintainer}\n").Output()
+
+	if err != nil {
+		return "", err
+	}
+
+	return string(out), nil
+
+}
+
+// AboutHandler shows the currently installed packages on the device.
+func AboutHandler(w http.ResponseWriter, r *http.Request) {
+
+	type packagesResponse struct {
+		PackageDataRows [][]string
+		ErrorMessage    string
+	}
+
+	packagesData, err := getInstalledPackages()
+	if err != nil {
+		tmpl.ExecuteTemplate(w, "about.html", packagesResponse{ErrorMessage: errorMessage(err)})
+	}
+
+	// Want to separate this into separate fields so that can display in a table in HTML
+	dataRows := [][]string{}
+	rows := strings.Split(packagesData, "\n")
+	for _, row := range rows {
+		// We only want packages related to cacophony.
+		if !strings.Contains(strings.ToUpper(row), "CACOPHONY") {
+			continue
+		}
+		words := strings.Split(strings.TrimSpace(row), "|")
+		dataRows = append(dataRows, words[:2])
+	}
+
+	tmpl.ExecuteTemplate(w, "about.html", packagesResponse{PackageDataRows: dataRows})
+}
+
 // CheckInterfaceHandler checks an interface to see if it is up or down.
 // To do this the ping command is used to send data to Cloudfare at 1.1.1.1
 func CheckInterfaceHandler(w http.ResponseWriter, r *http.Request) {
@@ -640,4 +699,9 @@ func CameraSnapshot(w http.ResponseWriter, r *http.Request) {
 // Trap - Shows trap state
 func Trap(w http.ResponseWriter, r *http.Request) {
 	tmpl.ExecuteTemplate(w, "trap.html", nil)
+}
+
+// Rename page to change device name and group
+func Rename(w http.ResponseWriter, r *http.Request) {
+	tmpl.ExecuteTemplate(w, "rename.html", nil)
 }
