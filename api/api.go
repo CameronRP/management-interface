@@ -32,6 +32,7 @@ import (
 	"time"
 
 	goapi "github.com/TheCacophonyProject/go-api"
+	goconfig "github.com/TheCacophonyProject/go-config"
 	signalstrength "github.com/TheCacophonyProject/management-interface/signal-strength"
 	"github.com/godbus/dbus"
 	"github.com/gorilla/mux"
@@ -204,6 +205,62 @@ func (api *ManagementAPI) Reboot(w http.ResponseWriter, r *http.Request) {
 		log.Println("rebooting")
 		log.Println(exec.Command("/sbin/reboot").Run())
 	}()
+	w.WriteHeader(http.StatusOK)
+}
+
+func (api *ManagementAPI) ConfigPost(w http.ResponseWriter, r *http.Request) {
+	c, err := goconfig.New(goconfig.DefaultConfigDir)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err)
+		return
+	}
+	//TODO might need to add type field for parsing 'value' so it's not a string
+	if err := c.Set(r.FormValue("key"), r.FormValue("value")); err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
+}
+
+func (api *ManagementAPI) ConfigGet(w http.ResponseWriter, r *http.Request) {
+	c, err := goconfig.New(goconfig.DefaultConfigDir)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err)
+		return
+	}
+
+	configSections := []string{
+		goconfig.DeviceKey,
+		goconfig.LocationKey,
+		goconfig.WindowsKey,
+	}
+
+	configDefaults := map[string]interface{}{
+		goconfig.LocationKey: goconfig.DefaultLocation,
+		goconfig.WindowsKey:  goconfig.DefaultWindows,
+	}
+
+	configMap := map[string]interface{}{}
+
+	for _, section := range configSections {
+		configMap[section] = c.Get(section) // Use Get not Unmarshal as you can see what values are not set with Get
+	}
+
+	valuesAndDefault := map[string]interface{}{
+		"values":   configMap,
+		"defaults": configDefaults,
+	}
+
+	jsonString, err := json.Marshal(valuesAndDefault)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println(err)
+		return
+	}
+	w.Write(jsonString)
 	w.WriteHeader(http.StatusOK)
 }
 

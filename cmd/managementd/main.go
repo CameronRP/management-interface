@@ -86,6 +86,8 @@ func main() {
 	apiRouter.HandleFunc("/signal-strength", apiObj.GetSignalStrength).Methods("GET")
 	apiRouter.HandleFunc("/reregister", apiObj.Reregister).Methods("POST")
 	apiRouter.HandleFunc("/reboot", apiObj.Reboot).Methods("POST")
+	apiRouter.HandleFunc("/config", apiObj.ConfigGet).Methods("GET")
+	apiRouter.HandleFunc("/config", apiObj.ConfigPost).Methods("POST")
 	apiRouter.HandleFunc("/location", managementinterface.APILocationHandler).Methods("POST") // Set location via a POST request.
 	apiRouter.HandleFunc("/clock", managementinterface.APITimeHandler).Methods("POST")        // Set times via a POST request.
 	apiRouter.Use(basicAuth)
