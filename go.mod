@@ -3,8 +3,9 @@ module github.com/TheCacophonyProject/management-interface
 go 1.12
 
 require (
-	github.com/TheCacophonyProject/go-api v0.0.0-20190808052028-4af8cb3d4d33
+	github.com/TheCacophonyProject/go-api v0.0.0-20190901221455-8bdb00df1b38
 	github.com/TheCacophonyProject/rs485-controller v0.0.0-20190626031115-5da88caf4bd3
+
 	github.com/gobuffalo/packr v1.30.1
 	github.com/goburrow/modbus v0.1.0 // indirect
 	github.com/goburrow/serial v0.1.0 // indirect

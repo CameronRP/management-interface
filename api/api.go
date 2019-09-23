@@ -269,6 +269,10 @@ func (api *ManagementAPI) DeleteRecording(w http.ResponseWriter, r *http.Request
 // TakeSnapshot will request a new snapshot to be taken by thermal-recorder
 func (api *ManagementAPI) TakeSnapshot(w http.ResponseWriter, r *http.Request) {
 	conn, err := dbus.SystemBus()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 	recorder := conn.Object("org.cacophony.thermalrecorder", "/org/cacophony/thermalrecorder")
 	err = recorder.Call("org.cacophony.thermalrecorder.TakeSnapshot", 0).Err
 	if err != nil {
@@ -277,8 +281,8 @@ func (api *ManagementAPI) TakeSnapshot(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Rename can change the devices name and gruop
-func (api *ManagementAPI) Rename(w http.ResponseWriter, r *http.Request) {
+// Reregister can change the devices name and gruop
+func (api *ManagementAPI) Reregister(w http.ResponseWriter, r *http.Request) {
 	group := r.FormValue("group")
 	name := r.FormValue("name")
 	if group == "" && name == "" {
@@ -300,7 +304,7 @@ func (api *ManagementAPI) Rename(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("renaming with name: '%s' group: '%s'", name, group)
-	if err := apiClient.Rename(name, group); err != nil {
+	if err := apiClient.Reregister(name, group, randString(20)); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		io.WriteString(w, err.Error())
 		return

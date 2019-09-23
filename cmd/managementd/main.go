@@ -69,6 +69,7 @@ func main() {
 	router.HandleFunc("/location", managementinterface.LocationHandler).Methods("GET", "POST") // Form to view and/or set location manually.
 	router.HandleFunc("/clock", managementinterface.TimeHandler).Methods("GET", "POST")        // Form to view and/or adjust time settings.
 	router.HandleFunc("/about", managementinterface.AboutHandler).Methods("GET")
+
 	router.HandleFunc("/advanced", managementinterface.AdvancedMenuHandler).Methods("GET")
 	router.HandleFunc("/camera", managementinterface.CameraHandler).Methods("GET")
 	router.HandleFunc("/camera/snapshot", managementinterface.CameraSnapshot).Methods("GET")
@@ -84,7 +85,7 @@ func main() {
 	apiRouter.HandleFunc("/recording/{id}", apiObj.DeleteRecording).Methods("DELETE")
 	apiRouter.HandleFunc("/camera/snapshot", apiObj.TakeSnapshot).Methods("PUT")
 	apiRouter.HandleFunc("/signal-strength", apiObj.GetSignalStrength).Methods("GET")
-	apiRouter.HandleFunc("/rename", apiObj.Rename).Methods("POST")
+	apiRouter.HandleFunc("/reregister", apiObj.Reregister).Methods("POST")
 	apiRouter.HandleFunc("/reboot", apiObj.Reboot).Methods("POST")
 	apiRouter.HandleFunc("/location", managementinterface.APILocationHandler).Methods("POST") // Set location via a POST request.
 	apiRouter.HandleFunc("/digital-pins", apiObj.GetAllDigitalPins).Methods("GET")
