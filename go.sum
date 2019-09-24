@@ -1,8 +1,12 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/TheCacophonyProject/go-api v0.0.0-20190901221455-8bdb00df1b38 h1:fBnpPUmpLjotLgbojyezZEnb4aRtl8mevXEhrYxFr0I=
 github.com/TheCacophonyProject/go-api v0.0.0-20190901221455-8bdb00df1b38/go.mod h1:7OQjzdX6PbCJDxVRgTqNH9y12Ew+Q1sx9nwcRG7fj9s=
+github.com/TheCacophonyProject/modbus v0.1.1-0.20190313225014-0d693c0d6871 h1:Bj1oOAmCKAHPcw6t+8zAc22dD4ESBJuJBfXjvLcX+Sw=
+github.com/TheCacophonyProject/modbus v0.1.1-0.20190313225014-0d693c0d6871/go.mod h1:1l3KypcCbJpjMmu6bLKNRAyRcR9C4h8u/pPm4IjUqeY=
 github.com/TheCacophonyProject/rs485-controller v0.0.0-20190626031115-5da88caf4bd3 h1:CaXgVXx2P1dHvc5dVcGGW5R0MR22GmqvIZdltFPdZKs=
 github.com/TheCacophonyProject/rs485-controller v0.0.0-20190626031115-5da88caf4bd3/go.mod h1:8iiZ7FUR306X/A+ptj9hpMukTMP/C4L284VselZaZv4=
+github.com/TheCacophonyProject/rs485-controller v0.0.0-20190924121611-8ebe7491aa12 h1:DfM5o1qEtnmp2LDx9JSibxDaZbkvISxdnaV5lxdiFb0=
+github.com/TheCacophonyProject/rs485-controller v0.0.0-20190924121611-8ebe7491aa12/go.mod h1:LPs2LTrfEE1+aTsfIn6pgFUFripqwiJtD2q2kSW0MMw=
 github.com/armon/consul-api v0.0.0-20180202201655-eb2c6b5be1b6/go.mod h1:grANhF5doyWs3UAsr3K4I6qtAmlQcZDesFNEHPZAzj8=
 github.com/coreos/etcd v3.3.10+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
 github.com/coreos/go-etcd v2.0.0+incompatible/go.mod h1:Jez6KQU2B/sWsbdaef3ED8NzMklzPG4d5KIOhIy30Tk=
@@ -26,6 +30,7 @@ github.com/goburrow/modbus v0.1.0 h1:DejRZY73nEM6+bt5JSP6IsFolJ9dVcqxsYbpLbeW/ro
 github.com/goburrow/modbus v0.1.0/go.mod h1:Kx552D5rLIS8E7TyUwQ/UdHEqvX5T8tyiGBTlzMcZBg=
 github.com/goburrow/serial v0.1.0 h1:v2T1SQa/dlUqQiYIT8+Cu7YolfqAi3K96UmhwYyuSrA=
 github.com/goburrow/serial v0.1.0/go.mod h1:sAiqG0nRVswsm1C97xsttiYCzSLBmUZ/VSlVLZJ8haA=
+github.com/godbus/dbus v0.0.0-20181101234600-2ff6f7ffd60f/go.mod h1:/YcGZj5zSblfDWMMoOzV4fas9FZnQYTkDnsGvmh2Grw=
 github.com/godbus/dbus v4.1.0+incompatible h1:WqqLRTsQic3apZUK9qC5sGNfXthmPXzUZ7nQPrNITa4=
 github.com/godbus/dbus v4.1.0+incompatible/go.mod h1:/YcGZj5zSblfDWMMoOzV4fas9FZnQYTkDnsGvmh2Grw=
 github.com/gofrs/flock v0.7.1 h1:DP+LD/t0njgoPBvT5MJLeliUIVQR03hiKR6vezdwHlc=
@@ -101,3 +106,5 @@ gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127/go.mod h1:Co6ibVJAznAaIkqp8
 gopkg.in/errgo.v2 v2.1.0/go.mod h1:hNsd1EY+bozCKY1Ytp96fpM3vjJbqLJn88ws8XvfDNI=
 gopkg.in/yaml.v2 v2.2.2 h1:ZCJp+EgiOT7lHqUV2J862kp8Qj64Jo6az82+3Td9dZw=
 gopkg.in/yaml.v2 v2.2.2/go.mod h1:hI93XBmqTisBFMUTm0b8Fm+jr3Dg1NNxqwp+5A1VGuI=
+periph.io/x/periph v0.0.0-20190218125427-df7c7a4f8f86 h1:qyalv/ClPLE2zvu48IhBmqcZZp3+XngDNCIwruFRW78=
+periph.io/x/periph v0.0.0-20190218125427-df7c7a4f8f86/go.mod h1:EWr+FCIU2dBWz5/wSWeiIUJTriYv9v2j2ENBmgYyy7Y=
