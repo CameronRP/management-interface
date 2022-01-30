@@ -39,7 +39,6 @@ import (
 	"github.com/TheCacophonyProject/lepton3"
 	signalstrength "github.com/TheCacophonyProject/management-interface/signal-strength"
 	saltrequester "github.com/TheCacophonyProject/salt-updater"
-	"github.com/godbus/dbus"
 	"github.com/gorilla/mux"
 
 	"github.com/TheCacophonyProject/event-reporter/eventclient"
@@ -176,17 +175,20 @@ func (api *ManagementAPI) DeleteRecording(w http.ResponseWriter, r *http.Request
 
 // TakeSnapshot will request a new snapshot to be taken by thermal-recorder
 func (api *ManagementAPI) TakeSnapshot(w http.ResponseWriter, r *http.Request) {
-	conn, err := dbus.SystemBus()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	recorder := conn.Object("org.cacophony.thermalrecorder", "/org/cacophony/thermalrecorder")
-	err = recorder.Call("org.cacophony.thermalrecorder.TakeSnapshot", 0).Err
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		return
-	}
+	return
+	/*
+		conn, err := dbus.SystemBus()
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		recorder := conn.Object("org.cacophony.thermalrecorder", "/org/cacophony/thermalrecorder")
+		err = recorder.Call("org.cacophony.thermalrecorder.TakeSnapshot", 0).Err
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+	*/
 }
 
 // Reregister can change the devices name and group
