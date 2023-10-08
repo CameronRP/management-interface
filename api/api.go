@@ -616,6 +616,54 @@ func (api *ManagementAPI) GetServiceStatus(w http.ResponseWriter, r *http.Reques
 	json.NewEncoder(w).Encode(serviceStatus)
 }
 
+type BatteryReading struct {
+	Time        string `json:"time"`
+	MainBattery string `json:"mainBattery"`
+	RTCBattery  string `json:"rtcBattery"`
+}
+
+func getLastBatteryReading() (BatteryReading, error) {
+	file, err := os.Open("/var/log/battery-readings.csv")
+	if err != nil {
+		return BatteryReading{}, err
+	}
+	defer file.Close()
+
+	var lastLine string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lastLine = scanner.Text()
+	}
+
+	if scanner.Err() != nil {
+		return BatteryReading{}, scanner.Err()
+	}
+
+	parts := strings.Split(lastLine, ",")
+	if len(parts) != 3 {
+		return BatteryReading{}, errors.New("unexpected format in battery-readings.csv")
+	}
+
+	return BatteryReading{
+		Time:        parts[0],
+		MainBattery: parts[1],
+		RTCBattery:  parts[2],
+	}, nil
+}
+
+func (api *ManagementAPI) GetBattery(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseForm(); err != nil {
+		parseFormErrorResponse(&w, err)
+		return
+	}
+	battery, err := getLastBatteryReading()
+	if err != nil {
+		serverError(&w, err)
+		return
+	}
+	json.NewEncoder(w).Encode(battery)
+}
+
 func (api *ManagementAPI) GetModem(w http.ResponseWriter, r *http.Request) {
 	// Send dbus call to modem service to get all modem statuses
 	conn, err := dbus.SystemBus()
